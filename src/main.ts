@@ -1,5 +1,6 @@
 import * as MapBox from 'mapbox-gl'
-import { along } from '@turf/turf'
+import { along, booleanEqual } from '@turf/turf'
+import { point } from '@turf/helpers'
 import { getCoord } from '@turf/invariant'
 
 import './style.css'
@@ -101,13 +102,12 @@ const draw = () => {
   })
 
   // @ts-ignore
-  const chunk = along(featureCollection.features[0], 0, {
+  const start = along(featureCollection.features[0], 0, {
     units: 'meters',
   })
-  let tick = 0
 
   // @ts-ignore
-  map.addSource('footPrint', { type: 'geojson', data: chunk })
+  map.addSource('footPrint', { type: 'geojson', data: start })
   map.addLayer({
     id: 'footPrint',
     type: 'circle',
@@ -118,17 +118,29 @@ const draw = () => {
     },
   })
 
+  let tick = 0
+  // @ts-ignore
+  let lastCoords = getCoord(start)
+
   const step = () => {
-    tick += 1
     // @ts-ignore
     const next = along(featureCollection.features[0], tick + 1.5, {
       units: 'meters',
     })
     // @ts-ignore
     map.getSource('footPrint').setData(next)
+    const coords = getCoord(next)
     // @ts-ignore
-    map.panTo(getCoord(next))
+    map.panTo(coords)
 
+    // @ts-ignore
+    if (booleanEqual(point(lastCoords), point(coords))) {
+      return
+    }
+
+    tick += 1
+    // @ts-ignore
+    lastCoords = coords
     window.requestAnimationFrame(step)
   }
 
