@@ -6,8 +6,8 @@ import { getCoord } from '@turf/invariant'
 import './style.css'
 
 const map = new MapBox.Map({
-  accessToken:
-    'pk.eyJ1IjoiZGFpZ28zIiwiYSI6ImNrOHRpbnE5azAwb3czZW8za3d2aXkwYTcifQ.mgnG69sg5mZrpok19dLiWg',
+  // @ts-ignore
+  accessToken: MAPBOX_ACCESS_TOKEN,
   style: 'mapbox://styles/mapbox/light-v10',
   container: 'map',
   center: [139.6238001, 35.4670337],

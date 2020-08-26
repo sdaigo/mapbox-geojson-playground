@@ -35,6 +35,9 @@ module.exports = {
       analyzerMode: 'static',
       openAnalyzer: false,
     }),
+    new webpack.DefinePlugin({
+      MAPBOX_ACCESS_TOKEN: JSON.stringify(process.env.MAPBOX_ACCESS_TOKEN),
+    }),
   ],
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
